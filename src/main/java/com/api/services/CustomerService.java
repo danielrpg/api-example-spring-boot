@@ -1,13 +1,10 @@
 package com.api.services;
 
-import com.api.dtos.CreateCustomerDTO;
 import com.api.dtos.CustomerDTO;
-import com.api.dtos.UpdateCustomerDTO;
 import com.api.models.Customer;
-import com.api.payload.MessageResponse;
+import com.api.payload.CustomerMessageResponse;
 import com.api.repositories.CustomerRepository;
 import org.springframework.stereotype.Service;
-import sun.plugin2.message.Message;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -19,47 +16,63 @@ public class CustomerService {
     public static final String CUSTOMER_CREATED_SUCCESSFULLY = "Customer created successfully";
     public static final String CUSTOMER_UPDATED_SUCCESSFULLY = "Customer updated successfully";
     public static final String CUSTOMER_DELETED_SUCCESSFULLY = "Customer deleted successfully";
+    public static final String ALL_CUSTOMERS_LISTED = "All customers listed";
 
-    final CustomerRepository customerRepository;
+    final CustomerRepository customerRepository;  // Definicion del clase a ser injectada
 
+    /**
+     * Injectando clase via constructor CustomerRepository
+     * @param CustomerRepository
+     **/
     public CustomerService(CustomerRepository customerRepository) {
-        this.customerRepository = customerRepository;
+        this.customerRepository = customerRepository; // asignando dependencia
     }
 
-    public List<Customer> getAll() {
-        return this.customerRepository.findAll();
+    public CustomerMessageResponse getAll() {
+        List<Customer> customerList = this.customerRepository.findAll();
+        return getResponseMessage(customerList, ALL_CUSTOMERS_LISTED);
     }
 
     @Transactional
-    public MessageResponse createCustomer(CustomerDTO createCustomerDTO) {
+    public CustomerMessageResponse createCustomer(CustomerDTO createCustomerDTO) {
         Customer newCustomer = getCustomer(createCustomerDTO, new Customer());
         customerRepository.save(newCustomer);
         return getResponseMessage(newCustomer, CUSTOMER_CREATED_SUCCESSFULLY);
     }
 
     @Transactional
-    public MessageResponse updateCustomer(Long id, CustomerDTO updateCustomerDTO) {
+    public CustomerMessageResponse updateCustomer(Long id, CustomerDTO updateCustomerDTO) {
         Customer customer = this.customerRepository.findById(id).get();
         Customer updatedCustomer = getCustomer(updateCustomerDTO, customer);
         customerRepository.save(updatedCustomer);
         return getResponseMessage(updatedCustomer, CUSTOMER_UPDATED_SUCCESSFULLY);
     }
 
-    public MessageResponse deleteCustomer(Long id) {
+    @Transactional
+    public CustomerMessageResponse deleteCustomer(Long id) {
         Customer deletedCustomer = this.customerRepository.findById(id).get();
         customerRepository.deleteById(id);
         return getResponseMessage(deletedCustomer, CUSTOMER_DELETED_SUCCESSFULLY);
     }
 
-    private MessageResponse getResponseMessage(Customer updatedCustomer, String message) {
-        MessageResponse messageResponse = new MessageResponse();
-        messageResponse.setStatus(true);
-        messageResponse.setErrorCode(200);
-        messageResponse.setMessage(message);
+    private CustomerMessageResponse getResponseMessage(Customer updatedCustomer, String message) {
+        CustomerMessageResponse customerMessageResponse = new CustomerMessageResponse();
+        customerMessageResponse.setStatus(true);
+        customerMessageResponse.setErrorCode(200);
+        customerMessageResponse.setMessage(message);
         List<Customer> listUpdatedCustomers = new ArrayList<>();
         listUpdatedCustomers.add(updatedCustomer);
-        messageResponse.setCustomer(listUpdatedCustomers);
-        return messageResponse;
+        customerMessageResponse.setCustomer(listUpdatedCustomers);
+        return customerMessageResponse;
+    }
+
+    private CustomerMessageResponse getResponseMessage(List<Customer> customerList, String message) {
+        CustomerMessageResponse customerMessageResponse = new CustomerMessageResponse();
+        customerMessageResponse.setStatus(true);
+        customerMessageResponse.setErrorCode(200);
+        customerMessageResponse.setMessage(message);
+        customerMessageResponse.setCustomer(customerList);
+        return customerMessageResponse;
     }
 
     private Customer getCustomer(CustomerDTO customerDTO, Customer customer) {
