@@ -5,6 +5,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
@@ -22,9 +23,9 @@ public class Product implements Serializable {
     private String name;
 
     @Column(name = "product_price")
-    @NotBlank(message = "Please enter product price")
+   // @NotBlank(message = "Please enter product price") //It is not working with Decimal values
     @NotNull
-    private Double price;
+    private BigDecimal price;
 
     @Column(name = "product_date")
     private Date productDate;
@@ -45,11 +46,11 @@ public class Product implements Serializable {
         this.name = name;
     }
 
-    public Double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 

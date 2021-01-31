@@ -1,10 +1,11 @@
 package com.api.dtos;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class ProductDTO {
     protected String name;
-    protected Double price;
+    protected BigDecimal price;
     protected Date productDate;
 
     public String getName() {
@@ -15,11 +16,11 @@ public class ProductDTO {
         this.name = name;
     }
 
-    public Double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 
