@@ -1,15 +1,9 @@
 package com.api.payload;
 
-import com.api.models.Customer;
-
-import java.util.List;
-
 public class MessageResponse {
-
-    private boolean status;
-    private int errorCode;
-    private String message;
-    private List<Customer> customer;
+    protected boolean status;
+    protected int errorCode;
+    protected String message;
 
     public boolean isStatus() {
         return status;
@@ -33,13 +27,5 @@ public class MessageResponse {
 
     public void setMessage(String message) {
         this.message = message;
-    }
-
-    public List<Customer> getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(List<Customer> customer) {
-        this.customer = customer;
     }
 }
