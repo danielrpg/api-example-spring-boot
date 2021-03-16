@@ -19,6 +19,7 @@ public class ProductServiceImpl implements ProductService {
     public static final String PRODUCT_WAS_ALREADY_SAVED_SUCCESSFULLY = "Product was already saved successfully";
     public static final String PRODUCT_WAS_ALREADY_UPDATED_SUCCESSFULLY = "Product was already updated successfully";
     public static final String PRODUCT_WAS_ALREADY_DELETED_SUCCESSFULLY = "Product was already deleted successfully";
+    public static final String PRODUCT_WAS_FOUND_SUCCESSFUL = "Product was found successful!";
     final ProductRepository productRepository;
 
     public ProductServiceImpl(ProductRepository productRepository) {
@@ -59,6 +60,14 @@ public class ProductServiceImpl implements ProductService {
         productList.add(oldProduct);
         this.productRepository.deleteById(id);
         return getProductMessageResponse(productList, PRODUCT_WAS_ALREADY_DELETED_SUCCESSFULLY);
+    }
+
+    @Override
+    public ProductMessageResponse getProductById(Long id) {
+        Product product = this.productRepository.findById(id).get();
+        List<Product> productList = new ArrayList<>();
+        productList.add(product);
+        return getProductMessageResponse(productList, PRODUCT_WAS_FOUND_SUCCESSFUL);
     }
 
     private ProductMessageResponse getProductMessageResponse(List<Product> productList, String message) {

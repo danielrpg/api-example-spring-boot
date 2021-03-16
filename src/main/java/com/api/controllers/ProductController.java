@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@CrossOrigin()
 @RequestMapping(value = "/api/v1/")
 public class ProductController {
 
@@ -19,6 +20,11 @@ public class ProductController {
     @GetMapping(value = "products")
     public ResponseEntity<?> getAll() {
         return ResponseEntity.ok(this.productService.getAllProducts());
+    }
+
+    @GetMapping(value = "products/{id}")
+    public ResponseEntity<?> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(this.productService.getProductById(id));
     }
 
     @PostMapping(value = "products")

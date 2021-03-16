@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@CrossOrigin()
 @RequestMapping(value = "/api/v1/")
 public class CustomerController {
 
@@ -20,6 +21,11 @@ public class CustomerController {
     @GetMapping(value = "customers")
     public ResponseEntity<?> getAll() {
         return ResponseEntity.ok(this.customerService.getAll());
+    }
+
+    @GetMapping(value = "customers/{id}")
+    public ResponseEntity<?> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(this.customerService.getCustomerById(id));
     }
 
     @PostMapping(value = "customers")
